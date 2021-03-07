@@ -12,6 +12,12 @@ class {{ class }} extends Patch
     public function up()
     {
         info('Hello!');
+
+        // Useful methods
+//        $this->log('Hello');
+//        $this->call('my-command', ['my-option' => 'my-value']);
+//        $this->seed('PatchV1_0_0Seeder');
+//        $this->truncate('my-table');
     }
 
     /**
@@ -22,5 +28,10 @@ class {{ class }} extends Patch
     public function down()
     {
         info('Goodbye :(');
+
+        // Useful methods
+//        $this->call('my-command', ['my-option' => 'my-value']);
+//        $this->seed('PatchV1_0_0Seeder');
+//        $this->truncate('my-table');
     }
 }

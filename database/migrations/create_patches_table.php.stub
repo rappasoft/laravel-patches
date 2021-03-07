@@ -17,6 +17,7 @@ class CreatePatchesTable extends Migration
             $table->id();
             $table->string('patch');
             $table->integer('batch');
+            $table->json('log')->nullable();
             $table->timestamp('ran_on');
         });
     }

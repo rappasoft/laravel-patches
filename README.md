@@ -70,6 +70,12 @@ php artisan patch:rollback --step=X
 
 You may use the following helper commands from your patch files:
 
+Log a line to the patches log column (up method only):
+
+```php
+$this->log('10 users modified');
+```
+
 Call an Artisan command with options:
 
 ```php
@@ -88,6 +94,8 @@ Truncate a table by name:
 $this->truncate($table);
 ```
 *Note: Does not disable foreign key checks.*
+
+**Please feel free to PR new helpers.**
 
 ## Testing
 

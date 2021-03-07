@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\DB;
  */
 abstract class Patch
 {
+
+    /**
+     * @var array
+     */
+    public array $log = [];
+
     /**
      * Call an Artisan command
      *
@@ -45,5 +51,19 @@ abstract class Patch
     public function truncate(string $table): void
     {
         DB::table($table)->truncate();
+    }
+
+    /**
+     * Add to the commands logged output
+     *
+     * @param  string  $line
+     *
+     * @return $this
+     */
+    public function log(string $line): Patch
+    {
+        $this->log[] = $line;
+
+        return $this;
     }
 }

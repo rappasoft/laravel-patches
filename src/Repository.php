@@ -2,7 +2,7 @@
 
 namespace Rappasoft\LaravelPatches;
 
-use Illuminate\Support\Facades\DB;
+use Rappasoft\LaravelPatches\Models\Patch;
 
 /**
  * Class Repository
@@ -11,13 +11,7 @@ use Illuminate\Support\Facades\DB;
  */
 class Repository
 {
-    /**
-     * @return string
-     */
-    public function getTable(): string
-    {
-        return 'patches';
-    }
+
 
     /**
      * Get list of patches.
@@ -28,7 +22,7 @@ class Repository
      */
     public function getPatches(int $steps): array
     {
-        $query = DB::table($this->getTable())->where('batch', '>=', '1');
+        $query = Patch::where('batch', '>=', '1');
 
         return $query->orderBy('batch', 'desc')
             ->orderBy('patch', 'desc')
@@ -44,8 +38,7 @@ class Repository
      */
     public function getRan(): array
     {
-        return DB::table($this->getTable())
-            ->orderBy('batch')
+        return Patch::orderBy('batch')
             ->orderBy('patch')
             ->pluck('patch')
             ->all();
@@ -58,7 +51,7 @@ class Repository
      */
     public function getLast(): array
     {
-        $query = DB::table($this->getTable())->where('batch', $this->getLastBatchNumber());
+        $query = Patch::where('batch', $this->getLastBatchNumber());
 
         return $query->orderBy('patch', 'desc')
             ->get()
@@ -70,12 +63,13 @@ class Repository
      *
      * @param  string  $file
      * @param  int  $batch
+     * @param  array  $log
      *
      * @return void
      */
-    public function log(string $file, int $batch): void
+    public function log(string $file, int $batch, array $log = []): void
     {
-        DB::table($this->getTable())->insert(['patch' => $file, 'batch' => $batch]);
+        Patch::create(['patch' => $file, 'batch' => $batch, 'log' => $log]);
     }
 
     /**
@@ -85,7 +79,7 @@ class Repository
      */
     public function delete(object $patch): void
     {
-        DB::table($this->getTable())->where('patch', $patch->patch)->delete();
+        Patch::where('patch', $patch->patch)->delete();
     }
 
     /**
@@ -105,6 +99,6 @@ class Repository
      */
     public function getLastBatchNumber(): ?int
     {
-        return DB::table($this->getTable())->max('batch');
+        return Patch::max('batch');
     }
 }

@@ -161,11 +161,17 @@ class Patcher
      *
      * @param  object  $patch
      * @param  string  $method
+     *
+     * @return array
      */
-    public function runPatch(object $patch, string $method): void
+    public function runPatch(object $patch, string $method): ?array
     {
         if (method_exists($patch, $method)) {
             $patch->{$method}();
+
+            return $patch->log;
         }
+
+        return null;
     }
 }

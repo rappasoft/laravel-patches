@@ -139,11 +139,11 @@ class PatchCommand extends Command
 
         $startTime = microtime(true);
 
-        $this->patcher->runPatch($patch, 'up');
+        $log = $this->patcher->runPatch($patch, 'up');
 
         $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
 
-        $this->repository->log($name, $batch);
+        $this->repository->log($name, $batch, $log);
 
         $this->line("<info>Patched:</info> {$name} ({$runTime}ms)");
     }
