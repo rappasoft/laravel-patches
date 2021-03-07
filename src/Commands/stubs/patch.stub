@@ -1,0 +1,26 @@
+<?php
+
+use Rappasoft\LaravelPatches\Patch;
+
+class {{ class }} extends Patch
+{
+    /**
+     * Run the patch.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        info('Hello!');
+    }
+
+    /**
+     * Reverse the patch.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        info('Goodbye :(');
+    }
+}
