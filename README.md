@@ -1,7 +1,7 @@
 ![Package Logo](https://banners.beyondco.de/Laravel%20Patches.png?theme=light&packageManager=composer+require&packageName=rappasoft%2Flaravel-patches&pattern=architect&style=style_1&description=Run+patches+migration+style+in+your+Laravel+applications.&md=1&showWatermark=0&fontSize=100px&images=puzzle)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rappasoft/laravel-patches.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-patches)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/rappasoft/laravel-patches/run-tests?label=tests)](https://github.com/rappasoft/laravel-patches/actions?query=workflow%3ATests+branch%3Amaster)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/rappasoft/laravel-patches/Run%20Tests?label=tests)](https://github.com/rappasoft/laravel-patches/actions?query=workflow%3ATests+branch%3Amaster)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/rappasoft/laravel-patches/Check%20&%20fix%20styling?label=code%20style)](https://github.com/rappasoft/laravel-patches/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/rappasoft/laravel-patches.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-patches)
 
