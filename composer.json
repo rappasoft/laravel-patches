@@ -1,6 +1,6 @@
 {
     "name": "rappasoft/laravel-patches",
-    "description": "Run patch commands like Laravel migrations",
+    "description": "Run patches migration style in your Laravel applications.",
     "keywords": [
         "rappasoft",
         "laravel-patches"
