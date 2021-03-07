@@ -108,7 +108,7 @@ class PatchMakeCommand extends Command
      */
     protected function create($name, $path): string
     {
-        $this->ensurePatchDoesntAlreadyExist($name, $this->patcher->getPatchPath());
+        $this->ensurePatchDoesntAlreadyExist($name);
 
         $stub = $this->getStub();
 
@@ -125,12 +125,13 @@ class PatchMakeCommand extends Command
      * Make sure two patches with the same class name do not get created
      *
      * @param $name
-     * @param  null  $patchesPath
      *
      * @throws FileNotFoundException
      */
-    protected function ensurePatchDoesntAlreadyExist($name, $patchesPath = null): void
+    protected function ensurePatchDoesntAlreadyExist($name): void
     {
+        $patchesPath = $this->patcher->getPatchPath();
+
         if (! empty($patchesPath)) {
             $patchFiles = $this->files->glob($patchesPath.'/*.php');
 

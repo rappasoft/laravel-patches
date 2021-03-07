@@ -58,13 +58,7 @@ class Patcher
      */
     public function patchesTableExists(): bool
     {
-        if (! Schema::hasTable('patches')) {
-            $this->output->error(__('The patches table does not exist, did you forget to migrate?'));
-
-            return false;
-        }
-
-        return true;
+        return Schema::hasTable('patches');
     }
 
     /**
@@ -99,7 +93,7 @@ class Patcher
             ->filter()
             ->values()
             ->keyBy(fn ($file) => $this->getPatchName($file))
-            ->sortBy(fn ($file, $key) => $key)
+            ->sortBy(fn ($_file, $key) => $key)
             ->all();
     }
 

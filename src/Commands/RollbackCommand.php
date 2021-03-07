@@ -23,7 +23,7 @@ class RollbackCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'patch:rollback {--step= : The number of patches to be reverted}';
+    protected $signature = 'patch:rollback {--step=0: The number of patches to be reverted}';
 
     /**
      * The console command description.
@@ -134,13 +134,9 @@ class RollbackCommand extends Command
      */
     protected function getPatchesForRollback(): array
     {
-        $step = (int)$this->option('step');
+        $steps = (int)$this->option('step');
 
-        if (($steps = $step ?? 0) > 0) {
-            return $this->repository->getPatches($steps);
-        }
-
-        return $this->repository->getLast();
+        return $steps > 0 ? $this->repository->getPatches($steps) : $this->repository->getLast();
     }
 
     /**

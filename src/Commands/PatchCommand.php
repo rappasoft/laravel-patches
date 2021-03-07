@@ -73,7 +73,9 @@ class PatchCommand extends Command
             return 1;
         }
 
-        if (! $this->patcher->setOutput($this->output)->patchesTableExists()) {
+        if (! $this->patcher->patchesTableExists()) {
+            $this->error(__('The patches table does not exist, did you forget to migrate?'));
+
             return 1;
         }
 
