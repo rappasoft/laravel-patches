@@ -1,4 +1,4 @@
-# Run patch commands like Laravel migrations
+![Package Logo](https://banners.beyondco.de/Laravel%20Patches.png?theme=light&packageManager=composer+require&packageName=rappasoft%2Flaravel-patches&pattern=architect&style=style_1&description=Run+patches+migration+style+in+your+Laravel+applications.&md=1&showWatermark=0&fontSize=100px&images=puzzle)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rappasoft/laravel-patches.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-patches)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/rappasoft/laravel-patches/run-tests?label=tests)](https://github.com/rappasoft/laravel-patches/actions?query=workflow%3ATests+branch%3Amaster)
