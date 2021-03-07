@@ -15,7 +15,6 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
  */
 class LaravelPatchesServiceProvider extends PackageServiceProvider
 {
-
     /**
      * @param  Package  $package
      */

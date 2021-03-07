@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
  */
 class Repository
 {
-
     /**
      * @return string
      */
