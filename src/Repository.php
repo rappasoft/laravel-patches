@@ -11,8 +11,6 @@ use Rappasoft\LaravelPatches\Models\Patch;
  */
 class Repository
 {
-
-
     /**
      * Get list of patches.
      *
