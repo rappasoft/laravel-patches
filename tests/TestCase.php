@@ -2,30 +2,17 @@
 
 namespace Rappasoft\LaravelPatches\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Rappasoft\LaravelPatches\LaravelPatchesServiceProvider;
 
-/**
- * Class TestCase
- *
- * @package Rappasoft\LaravelPatches\Tests
- */
 class TestCase extends Orchestra
 {
     use DatabaseTransactions;
 
-    /**
-     *
-     */
     public function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Rappasoft\\LaravelPatches\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
 
         $this->clearPatches();
     }
@@ -59,7 +46,7 @@ class TestCase extends Orchestra
     }
 
     /**
-     *
+     * Clear the database/patches folder in Orchestra
      */
     public function clearPatches(): void
     {
