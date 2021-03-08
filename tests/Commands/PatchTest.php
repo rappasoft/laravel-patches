@@ -9,8 +9,10 @@ class PatchTest extends TestCase
     /** @test */
     public function it_runs_pending_patches()
     {
-        file_put_contents(database_path('patches/2021_01_01_000000_my_first_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_01_000000_my_first_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
+        );
 
         $this->assertDatabaseCount('patches', 0);
 
@@ -28,8 +30,10 @@ class PatchTest extends TestCase
     /** @test */
     public function it_increments_the_batch_number_normally()
     {
-        file_put_contents(database_path('patches/2021_01_01_000000_my_first_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_01_000000_my_first_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
+        );
 
         $this->artisan('patch')->run();
 
@@ -38,8 +42,10 @@ class PatchTest extends TestCase
             'batch' => 1,
         ]);
 
-        file_put_contents(database_path('patches/2021_01_02_000000_my_second_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_02_000000_my_second_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php')
+        );
 
         $this->artisan('patch')->run();
 
@@ -52,11 +58,15 @@ class PatchTest extends TestCase
     /** @test */
     public function multiple_patches_have_the_same_batch_if_run_at_the_same_time()
     {
-        file_put_contents(database_path('patches/2021_01_01_000000_my_first_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_01_000000_my_first_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
+        );
 
-        file_put_contents(database_path('patches/2021_01_02_000000_my_second_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_02_000000_my_second_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php')
+        );
 
         $this->artisan('patch')->run();
 
@@ -76,11 +86,15 @@ class PatchTest extends TestCase
     /** @test */
     public function it_increments_the_batch_number_by_one_if_step_is_enabled()
     {
-        file_put_contents(database_path('patches/2021_01_01_000000_my_first_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_01_000000_my_first_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
+        );
 
-        file_put_contents(database_path('patches/2021_01_02_000000_my_second_patch.php'),
-            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php'));
+        file_put_contents(
+            database_path('patches/2021_01_02_000000_my_second_patch.php'),
+            file_get_contents(__DIR__.'/patches/2021_01_02_000000_my_second_patch.php')
+        );
 
         $this->artisan('patch', ['--step' => true])->run();
 

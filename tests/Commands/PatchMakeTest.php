@@ -2,8 +2,8 @@
 
 namespace Rappasoft\LaravelPatches\Tests\Commands;
 
-use InvalidArgumentException;
 use Illuminate\Support\Facades\File;
+use InvalidArgumentException;
 use Rappasoft\LaravelPatches\Tests\TestCase;
 
 class PatchMakeTest extends TestCase
