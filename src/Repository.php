@@ -67,7 +67,12 @@ class Repository
      */
     public function log(string $file, int $batch, array $log = []): void
     {
-        Patch::create(['patch' => $file, 'batch' => $batch, 'log' => $log]);
+        Patch::create([
+            'patch' => $file,
+            'batch' => $batch,
+            'log' => $log,
+            'ran_on' => now(),
+        ]);
     }
 
     /**
