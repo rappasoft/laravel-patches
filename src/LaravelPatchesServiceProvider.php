@@ -22,6 +22,7 @@ class LaravelPatchesServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-patches')
+            ->hasConfigFile('laravel-patches')
             ->hasMigration('create_patches_table')
             ->hasCommands([PatchMakeCommand::class, PatchCommand::class, RollbackCommand::class]);
     }
