@@ -17,6 +17,12 @@ You can install the package via composer:
 composer require rappasoft/laravel-patches
 ```
 
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --provider="Rappasoft\LaravelPatches\LaravelPatchesServiceProvider" --tag="laravel-patches-config"
+```
+
 You can publish and run the migrations with:
 
 ```bash

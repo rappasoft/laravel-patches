@@ -58,7 +58,7 @@ class Patcher
      */
     public function patchesTableExists(): bool
     {
-        return Schema::hasTable('patches');
+        return Schema::hasTable(config('laravel-patches.table_name'));
     }
 
     /**

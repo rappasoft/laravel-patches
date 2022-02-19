@@ -13,7 +13,7 @@ class CreatePatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('patches', function (Blueprint $table) {
+        Schema::create(config('laravel-patches.table_name'), function (Blueprint $table) {
             $table->id();
             $table->string('patch');
             $table->integer('batch');
@@ -29,6 +29,6 @@ class CreatePatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('patches');
+        Schema::dropIfExists(config('laravel-patches.table_name'));
     }
 }
