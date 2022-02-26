@@ -17,22 +17,22 @@ class RollbackTest extends TestCase
             file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
         );
 
-        $this->assertDatabaseCount('patches', 0);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 0);
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseCount('patches', 1);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 1);
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
 
         $this->artisan('patch:rollback')->run();
 
-        $this->assertDatabaseCount('patches', 0);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 0);
 
-        $this->assertDatabaseMissing('patches', [
+        $this->assertDatabaseMissing(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
@@ -56,11 +56,11 @@ class RollbackTest extends TestCase
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseCount('patches', 2);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 2);
 
         $this->artisan('patch:rollback')->run();
 
-        $this->assertDatabaseCount('patches', 0);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 0);
     }
 
     /** @test */
@@ -80,24 +80,24 @@ class RollbackTest extends TestCase
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_02_000000_my_second_patch',
             'batch' => 1,
         ]);
 
         $this->artisan('patch:rollback', ['--step' => 1])->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
 
-        $this->assertDatabaseMissing('patches', [
+        $this->assertDatabaseMissing(config('laravel-patches.table_name'), [
             'patch' => '2021_01_02_000000_my_second_patch',
             'batch' => 1,
         ]);

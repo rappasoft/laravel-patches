@@ -14,13 +14,13 @@ class PatchTest extends TestCase
             file_get_contents(__DIR__.'/patches/2021_01_01_000000_my_first_patch.php')
         );
 
-        $this->assertDatabaseCount('patches', 0);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 0);
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseCount('patches', 1);
+        $this->assertDatabaseCount(config('laravel-patches.table_name'), 1);
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
             'log' => json_encode(['Hello First!']),
@@ -37,7 +37,7 @@ class PatchTest extends TestCase
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
@@ -49,7 +49,7 @@ class PatchTest extends TestCase
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'patch' => '2021_01_02_000000_my_second_patch',
             'batch' => 2,
         ]);
@@ -70,13 +70,13 @@ class PatchTest extends TestCase
 
         $this->artisan('patch')->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'id' => 1,
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'id' => 2,
             'patch' => '2021_01_02_000000_my_second_patch',
             'batch' => 1,
@@ -98,13 +98,13 @@ class PatchTest extends TestCase
 
         $this->artisan('patch', ['--step' => true])->run();
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'id' => 1,
             'patch' => '2021_01_01_000000_my_first_patch',
             'batch' => 1,
         ]);
 
-        $this->assertDatabaseHas('patches', [
+        $this->assertDatabaseHas(config('laravel-patches.table_name'), [
             'id' => 2,
             'patch' => '2021_01_02_000000_my_second_patch',
             'batch' => 2,

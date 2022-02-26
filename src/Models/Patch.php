@@ -40,4 +40,14 @@ class Patch extends Model
     protected $casts = [
         'log' => 'array',
     ];
+
+    /**
+     * Get the table associated with the model.
+     *
+     * @return string
+     */
+    public function getTable()
+    {
+        return config('laravel-patches.table_name');
+    }
 }
