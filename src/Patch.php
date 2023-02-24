@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
  */
 abstract class Patch
 {
-
     /**
      * @var array
      */
