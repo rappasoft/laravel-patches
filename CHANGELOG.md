@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-patches` will be documented in this file.
 
+## 3.0.0 - 2023-04-03
+
+### Added
+
+- Laravel 10 Support
+
 ## 2.0.1 - 2022-02-26
 
 ### Changed
