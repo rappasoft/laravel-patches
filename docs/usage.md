@@ -3,7 +3,7 @@ title: Usage
 weight: 7
 ---
 
-### Making Patches
+## Making Patches
 
 ```bash
 php artisan make:patch patch_1_0_0
@@ -11,7 +11,7 @@ php artisan make:patch patch_1_0_0
 
 This created a timestamped patch file under database/patches.
 
-### Running Patches
+## Running Patches
 
 To run all available patches:
 
@@ -31,7 +31,7 @@ To force the patches to run in production (deploy scripts, etc.):
 php artisan patch --force
 ```
 
-### Rolling Back Patches
+## Rolling Back Patches
 
 To rollback all patches of the last batch:
 
@@ -45,7 +45,7 @@ To rollback the last X patches regardless of batch:
 php artisan patch:rollback --step=X
 ```
 
-### Patch File Helpers
+## Patch File Helpers
 
 You may use the following helper commands from your patch files:
 
