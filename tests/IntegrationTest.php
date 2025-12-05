@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Rappasoft\LaravelPatches\Events\{PatchExecuted, PatchExecuting, PatchFailed};
+use Rappasoft\LaravelPatches\Events\PatchExecuted;
+use Rappasoft\LaravelPatches\Events\PatchExecuting;
+use Rappasoft\LaravelPatches\Events\PatchFailed;
 use Rappasoft\LaravelPatches\Models\Patch;
-
 
 test('complete workflow with all features', function () {
     Event::fake();
@@ -99,7 +100,7 @@ test('error handling with all features enabled', function () {
         }'
     );
 
-    expect(fn() => \Illuminate\Support\Facades\Artisan::call('patch'))->toThrow('Test error message');
+    expect(fn () => \Illuminate\Support\Facades\Artisan::call('patch'))->toThrow('Test error message');
 
     // Verify error was logged
     $patch = Patch::where('patch', '2024_01_01_000000_error_test')->first();
@@ -228,7 +229,7 @@ test('transaction rollback with metadata tracking', function () {
         }'
     );
 
-    expect(fn() => $this->artisan('patch'))->toThrow('Force rollback');
+    expect(fn () => $this->artisan('patch'))->toThrow('Force rollback');
 
     // Verify transactional data rolled back
     expect(DB::table('patches')->where('batch', 888)->exists())->toBeFalse();

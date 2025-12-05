@@ -104,8 +104,6 @@ class PatchBaseTest extends TestCase
         $this->assertEquals('', $patch->description());
     }
 
-
-
     public function test_patch_can_set_useTransaction_to_true(): void
     {
         $patch = new class extends Patch {

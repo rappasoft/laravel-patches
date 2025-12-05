@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelPatches\Models\Patch;
 use Rappasoft\LaravelPatches\Repository;
-
 
 test('log stores patch with basic data', function () {
     $repository = new Repository();

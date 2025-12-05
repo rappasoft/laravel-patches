@@ -3,10 +3,13 @@
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Rappasoft\LaravelPatches\Events\{PatchExecuted, PatchExecuting, PatchFailed, PatchRolledBack, PatchRollingBack};
+use Rappasoft\LaravelPatches\Events\PatchExecuted;
+use Rappasoft\LaravelPatches\Events\PatchExecuting;
+use Rappasoft\LaravelPatches\Events\PatchFailed;
+use Rappasoft\LaravelPatches\Events\PatchRolledBack;
+use Rappasoft\LaravelPatches\Events\PatchRollingBack;
 use Rappasoft\LaravelPatches\Patch;
 use Rappasoft\LaravelPatches\Patcher;
-
 
 beforeEach(function () {
     Event::fake();
@@ -15,7 +18,8 @@ beforeEach(function () {
 test('runPatch returns result array with required keys', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             $this->log('Test log');
         }
     };
@@ -32,7 +36,9 @@ test('runPatch returns result array with required keys', function () {
 test('runPatch returns null log when method does not exist', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     $result = $patcher->runPatch($patch, 'nonexistent');
@@ -46,7 +52,9 @@ test('runPatch returns null log when method does not exist', function () {
 test('runPatch dispatches PatchExecuting event for up method', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     $patcher->runPatch($patch, 'up', 'test_patch', 1);
@@ -61,7 +69,8 @@ test('runPatch dispatches PatchExecuting event for up method', function () {
 test('runPatch dispatches PatchExecuted event on success', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             $this->log('Success');
         }
     };
@@ -80,7 +89,8 @@ test('runPatch dispatches PatchExecuted event on success', function () {
 test('runPatch dispatches PatchFailed event on exception', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             throw new \Exception('Test error');
         }
     };
@@ -99,7 +109,8 @@ test('runPatch dispatches PatchFailed event on exception', function () {
 test('runPatch captures exception without re-throwing', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             throw new \RuntimeException('Error');
         }
     };
@@ -114,7 +125,9 @@ test('runPatch captures exception without re-throwing', function () {
 test('runPatch dispatches PatchRollingBack for down method', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function down() {}
+        public function down()
+        {
+        }
     };
 
     $patcher->runPatch($patch, 'down', 'test_patch');
@@ -128,7 +141,9 @@ test('runPatch dispatches PatchRollingBack for down method', function () {
 test('runPatch dispatches PatchRolledBack after successful down', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function down() {}
+        public function down()
+        {
+        }
     };
 
     $patcher->runPatch($patch, 'down', 'test_patch', 1);
@@ -142,7 +157,8 @@ test('runPatch dispatches PatchRolledBack after successful down', function () {
 test('runPatch measures execution time accurately', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             usleep(10000); // 10ms
         }
     };
@@ -156,7 +172,8 @@ test('runPatch measures execution time accurately', function () {
 test('runPatch tracks memory usage', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             // Allocate some memory
             $data = array_fill(0, 1000, 'test');
         }
@@ -174,8 +191,10 @@ test('runPatch uses transaction when patch has useTransaction true', function ()
     $patch = new class extends Patch {
         protected bool $useTransaction = true;
         
-        public function up() {
+        public function up()
+        {
             DB::table('patches')->insert(['patch' => 'test', 'batch' => 99, 'ran_on' => now()]);
+
             throw new \Exception('Rollback test');
         }
     };
@@ -191,7 +210,8 @@ test('runPatch does not use transaction when useTransaction is false', function 
     $patch = new class extends Patch {
         protected bool $useTransaction = false;
         
-        public function up() {
+        public function up()
+        {
             DB::table('patches')->insert(['patch' => 'test', 'batch' => 88, 'ran_on' => now()]);
         }
     };
@@ -207,8 +227,10 @@ test('runPatch uses global config for transactions', function () {
     
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             DB::table('patches')->insert(['patch' => 'test', 'batch' => 77, 'ran_on' => now()]);
+
             throw new \Exception('Test');
         }
     };
@@ -226,7 +248,8 @@ test('runPatch patch-level transaction overrides config', function () {
     $patch = new class extends Patch {
         protected bool $useTransaction = false; // Override
         
-        public function up() {
+        public function up()
+        {
             DB::table('patches')->insert(['patch' => 'test', 'batch' => 66, 'ran_on' => now()]);
             // No exception, should persist
         }
@@ -281,9 +304,11 @@ test('shouldUseTransaction defaults to false', function () {
 test('runPatch handles patch with logs before exception', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {
+        public function up()
+        {
             $this->log('Step 1 complete');
             $this->log('Step 2 complete');
+
             throw new \Exception('Step 3 failed');
         }
     };
@@ -297,7 +322,9 @@ test('runPatch handles patch with logs before exception', function () {
 test('runPatch does not dispatch events when name or batch not provided', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     // Call without name and batch
@@ -310,7 +337,9 @@ test('runPatch does not dispatch events when name or batch not provided', functi
 test('runPatch rounds memory to 2 decimal places', function () {
     $patcher = new Patcher(new Filesystem());
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     $result = $patcher->runPatch($patch, 'up');

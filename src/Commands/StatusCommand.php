@@ -58,6 +58,7 @@ class StatusCommand extends Command
     {
         if (! $this->patcher->patchesTableExists()) {
             $this->error(__('The patches table does not exist, did you forget to migrate?'));
+
             return 1;
         }
 
@@ -110,6 +111,7 @@ class StatusCommand extends Command
 
         if (empty($rows)) {
             $this->info('No patches found matching the criteria.');
+
             return 0;
         }
 

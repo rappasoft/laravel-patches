@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Event;
-use Rappasoft\LaravelPatches\Events\{PatchExecuting, PatchExecuted, PatchFailed, PatchRollingBack, PatchRolledBack};
+use Rappasoft\LaravelPatches\Events\PatchExecuted;
+use Rappasoft\LaravelPatches\Events\PatchExecuting;
+use Rappasoft\LaravelPatches\Events\PatchFailed;
+use Rappasoft\LaravelPatches\Events\PatchRolledBack;
+use Rappasoft\LaravelPatches\Events\PatchRollingBack;
 use Rappasoft\LaravelPatches\Patch;
-
 
 beforeEach(function () {
     Event::fake();
@@ -11,7 +14,9 @@ beforeEach(function () {
 
 test('PatchExecuting event is dispatched with correct data', function () {
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     event(new PatchExecuting('test_patch', 1, $patch));
@@ -58,7 +63,9 @@ test('PatchFailed event is dispatched with exception', function () {
 
 test('PatchRollingBack event is dispatched', function () {
     $patch = new class extends Patch {
-        public function down() {}
+        public function down()
+        {
+        }
     };
 
     event(new PatchRollingBack('test_patch', $patch));
@@ -94,7 +101,9 @@ test('event listeners can be registered', function () {
 
 test('multiple events can be dispatched in sequence', function () {
     $patch = new class extends Patch {
-        public function up() {}
+        public function up()
+        {
+        }
     };
 
     event(new PatchExecuting('patch1', 1, $patch));

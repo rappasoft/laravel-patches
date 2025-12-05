@@ -87,6 +87,7 @@ class PatchCommand extends Command
         // Handle dry run mode
         if ($this->option('dry-run')) {
             $this->handleDryRun($patches);
+
             return 0;
         }
 
@@ -104,6 +105,7 @@ class PatchCommand extends Command
     {
         if (! count($patches)) {
             $this->info(__('No patches to run.'));
+
             return;
         }
 

@@ -2,7 +2,6 @@
 
 use Rappasoft\LaravelPatches\Models\Patch;
 
-
 test('status command shows error when patches table does not exist', function () {
     // Drop all tables to simulate fresh install
     \Illuminate\Support\Facades\Schema::drop('patches');

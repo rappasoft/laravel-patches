@@ -1,8 +1,6 @@
 <?php
 
-use Rappasoft\LaravelPatches\Patch;
 use Illuminate\Support\Facades\DB;
-
 
 test('patch with useTransaction true rolls back on exception', function () {
     file_put_contents(

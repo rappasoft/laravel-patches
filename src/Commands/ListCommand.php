@@ -58,6 +58,7 @@ class ListCommand extends Command
     {
         if (! $this->patcher->patchesTableExists()) {
             $this->error(__('The patches table does not exist, did you forget to migrate?'));
+
             return 1;
         }
 
@@ -93,12 +94,14 @@ class ListCommand extends Command
             } else {
                 $this->info('No patches found matching the criteria.');
             }
+
             return 0;
         }
 
         // Output as JSON
         if ($this->option('json')) {
             $this->line(json_encode($patches, JSON_PRETTY_PRINT));
+
             return 0;
         }
 

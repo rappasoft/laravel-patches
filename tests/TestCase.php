@@ -2,7 +2,6 @@
 
 namespace Rappasoft\LaravelPatches\Tests;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Rappasoft\LaravelPatches\LaravelPatchesServiceProvider;
 

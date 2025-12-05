@@ -2,7 +2,6 @@
 
 use Rappasoft\LaravelPatches\Models\Patch;
 
-
 test('list command shows error when patches table does not exist', function () {
     \Illuminate\Support\Facades\Schema::drop('patches');
     

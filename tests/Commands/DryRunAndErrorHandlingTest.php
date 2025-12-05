@@ -1,9 +1,8 @@
 <?php
 
-use Rappasoft\LaravelPatches\Models\Patch;
 use Illuminate\Support\Facades\Event;
 use Rappasoft\LaravelPatches\Events\PatchExecuted;
-
+use Rappasoft\LaravelPatches\Models\Patch;
 
 test('dry run mode preview patches without executing', function () {
     file_put_contents(
@@ -97,7 +96,7 @@ test('patch command shows error message on failure', function () {
         }'
     );
 
-    expect(fn() => $this->artisan('patch'))->toThrow('Custom error');
+    expect(fn () => $this->artisan('patch'))->toThrow('Custom error');
 });
 
 test('patch command continues on error when configured', function () {
@@ -156,7 +155,7 @@ test('patch command stops on error by default', function () {
         }'
     );
 
-    expect(fn() => $this->artisan('patch'))->toThrow('Stop here');
+    expect(fn () => $this->artisan('patch'))->toThrow('Stop here');
 
     expect(Patch::where('patch', '2024_01_02_000000_should_not_run')->exists())->toBeFalse();
 });
@@ -230,7 +229,7 @@ test('patch command respects transaction config', function () {
         }'
     );
 
-    expect(fn() => $this->artisan('patch'))->toThrow('Rollback');
+    expect(fn () => $this->artisan('patch'))->toThrow('Rollback');
 
     expect(\Illuminate\Support\Facades\DB::table('patches')->where('batch', 99)->exists())->toBeFalse();
 });

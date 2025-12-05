@@ -2,9 +2,6 @@
 
 namespace Rappasoft\LaravelPatches;
 
-use Rappasoft\LaravelPatches\Commands\PatchCommand;
-use Rappasoft\LaravelPatches\Commands\PatchMakeCommand;
-use Rappasoft\LaravelPatches\Commands\RollbackCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
