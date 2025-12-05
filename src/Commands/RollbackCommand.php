@@ -151,11 +151,9 @@ class RollbackCommand extends Command
 
         $this->line("<comment>Rolling back:</comment> {$name}");
 
-        $startTime = microtime(true);
+        $result = $this->patcher->runPatch($instance, 'down', $name);
 
-        $this->patcher->runPatch($instance, 'down');
-
-        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+        $runTime = number_format($result['executionTime'], 2);
 
         $this->repository->delete($patch);
 

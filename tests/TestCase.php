@@ -8,9 +8,7 @@ use Rappasoft\LaravelPatches\LaravelPatchesServiceProvider;
 
 class TestCase extends Orchestra
 {
-    use DatabaseTransactions;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +30,7 @@ class TestCase extends Orchestra
     /**
      * @param  \Illuminate\Foundation\Application  $app
      */
-    public function getEnvironmentSetUp($app)
+    public function getEnvironmentSetUp($app): void
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
@@ -43,6 +41,9 @@ class TestCase extends Orchestra
 
         include_once __DIR__.'/../database/migrations/create_patches_table.php.stub';
         (new \CreatePatchesTable())->up();
+        
+        include_once __DIR__.'/../database/migrations/add_metadata_to_patches_table.php.stub';
+        (new \AddMetadataToPatchesTable())->up();
     }
 
     /**

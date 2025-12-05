@@ -12,11 +12,20 @@ use Illuminate\Support\Facades\DB;
  */
 abstract class Patch
 {
-
     /**
      * @var array
      */
     public array $log = [];
+
+    /**
+     * Get the description of this patch.
+     *
+     * @return string|null
+     */
+    public function description(): ?string
+    {
+        return null;
+    }
 
     /**
      * Call an Artisan command

@@ -18,27 +18,23 @@ class Patch extends Model
     public $timestamps = false;
 
     /**
-     * @var string[]
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<string>|bool
      */
-    protected $fillable = [
-        'patch',
-        'batch',
-        'log',
-        'ran_on',
-    ];
+    protected $guarded = [];
 
     /**
-     * @var string[]
-     */
-    protected $dates = [
-        'ran_on',
-    ];
-
-    /**
-     * @var string[]
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
      */
     protected $casts = [
         'log' => 'array',
+        'ran_on' => 'datetime',
+        'execution_time_ms' => 'integer',
+        'memory_used_mb' => 'float',
+        'status' => 'string',
     ];
 
     /**

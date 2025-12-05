@@ -62,17 +62,69 @@ class Repository
      * @param  string  $file
      * @param  int  $batch
      * @param  array  $log
+     * @param  int|null  $executionTime
+     * @param  float|null  $memoryUsed
+     * @param  string|null  $executedBy
+     * @param  string|null  $environment
+     * @param  string  $status
+     * @param  string|null  $errorMessage
+     * @param  string|null  $errorTrace
      *
      * @return void
      */
-    public function log(string $file, int $batch, array $log = []): void
-    {
-        Patch::create([
+    public function log(
+        string $file,
+        int $batch,
+        array $log = [],
+        ?int $executionTime = null,
+        ?float $memoryUsed = null,
+        ?string $executedBy = null,
+        ?string $environment = null,
+        string $status = 'success',
+        ?string $errorMessage = null,
+        ?string $errorTrace = null
+    ): void {
+        $data = [
             'patch' => $file,
             'batch' => $batch,
             'log' => $log,
             'ran_on' => now(),
-        ]);
+            'status' => $status,
+        ];
+
+        if (config('laravel-patches.track_metadata', true)) {
+            $data['execution_time_ms'] = $executionTime;
+            $data['environment'] = $environment ?? app()->environment();
+        }
+
+        if (config('laravel-patches.track_memory', true)) {
+            $data['memory_used_mb'] = $memoryUsed;
+        }
+
+        if (config('laravel-patches.track_user', true)) {
+            $data['executed_by'] = $executedBy ?? $this->getCurrentUser();
+        }
+
+        if (config('laravel-patches.log_errors', true) && $status === 'failed') {
+            $data['error_message'] = $errorMessage;
+            $data['error_trace'] = $errorTrace;
+        }
+
+        Patch::create($data);
+    }
+
+    /**
+     * Get the current user executing the patch.
+     *
+     * @return string
+     */
+    protected function getCurrentUser(): string
+    {
+        if (app()->runningInConsole()) {
+            return get_current_user() . '@' . gethostname();
+        }
+
+        return auth()->check() ? auth()->user()->email ?? auth()->id() : 'guest';
     }
 
     /**
