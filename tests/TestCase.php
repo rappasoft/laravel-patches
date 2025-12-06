@@ -57,6 +57,10 @@ class TestCase extends Orchestra
      */
     public function clearPatches(): void
     {
+        if (! is_dir(database_path('patches'))) {
+            mkdir(database_path('patches'), 0777, true);
+        }
+
         foreach (glob(database_path('patches').'/*') as $file) {
             unlink($file);
         }
