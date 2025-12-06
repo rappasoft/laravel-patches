@@ -18,6 +18,16 @@ abstract class Patch
     public array $log = [];
 
     /**
+     * Get the description of this patch.
+     *
+     * @return string|null
+     */
+    public function description(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Call an Artisan command
      *
      * @param $command

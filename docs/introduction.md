@@ -12,4 +12,18 @@ weight: 1
 
 This package generates patch files in the same fashion Laravel generates migrations. Each file is timestamped with an up and a down method and is associated with a batch. You may run or rollback patches with the commands below.
 
-This is a very simple package. It runs whatever is in your up and down methods on each patch in the order the patches are defined. It currently does not handle any errors or database transactions, please make sure you account for everything and have a backup plan when running patches in production.
+## Features
+
+- **Migration-style patches** with `up()` and `down()` methods
+- **Batch tracking** for organized rollbacks
+- **Comprehensive metadata** tracking (execution time, memory, user, environment)
+- **Event system** for monitoring and custom workflows
+- **Transaction support** for atomic operations
+- **Error handling** with detailed logging and recovery options
+- **Multiple commands** for managing patches (`status`, `list`, `dry-run`)
+- **Laravel 11 & 12 compatible**
+
+## Requirements
+
+- PHP 8.2+
+- Laravel 11.x - 12.x

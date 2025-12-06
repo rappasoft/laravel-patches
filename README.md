@@ -11,12 +11,24 @@ This package generates patch files in the same fashion Laravel generates migrati
 
 This is a very simple package. It runs whatever is in your up and down methods on each patch in the order the patches are defined. It currently does not handle any errors or database transactions, please make sure you account for everything and have a backup plan when running patches in production.
 
+## Requirements
+
+- PHP 8.2+
+- Laravel 11.x - 12.x
+
 ## Installation
 
 You can install the package via composer:
 
 ```bash
 composer require rappasoft/laravel-patches
+```
+
+Publish and run the migrations:
+
+```bash
+php artisan vendor:publish --provider="Rappasoft\LaravelPatches\LaravelPatchesServiceProvider" --tag="laravel-patches-migrations"
+php artisan migrate
 ```
 
 ## Documentation and Usage Instructions

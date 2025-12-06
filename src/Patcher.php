@@ -4,9 +4,16 @@ namespace Rappasoft\LaravelPatches;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Rappasoft\LaravelPatches\Events\PatchExecuted;
+use Rappasoft\LaravelPatches\Events\PatchExecuting;
+use Rappasoft\LaravelPatches\Events\PatchFailed;
+use Rappasoft\LaravelPatches\Events\PatchRolledBack;
+use Rappasoft\LaravelPatches\Events\PatchRollingBack;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Class Patcher
@@ -154,17 +161,94 @@ class Patcher
      *
      * @param  object  $patch
      * @param  string  $method
+     * @param  string|null  $name
+     * @param  int|null  $batch
      *
-     * @return array
+     * @return array{log: array|null, executionTime: int, memoryUsed: float, exception: Throwable|null}
      */
-    public function runPatch(object $patch, string $method): ?array
+    public function runPatch(object $patch, string $method, ?string $name = null, ?int $batch = null): array
     {
-        if (method_exists($patch, $method)) {
-            $patch->{$method}();
-
-            return $patch->log;
+        if (! method_exists($patch, $method)) {
+            return [
+                'log' => null,
+                'executionTime' => 0,
+                'memoryUsed' => 0.0,
+                'exception' => null,
+            ];
         }
 
-        return null;
+        $startTime = microtime(true);
+        $startMemory = memory_get_peak_usage(true);
+        $exception = null;
+        $log = null;
+
+        // Dispatch executing event
+        if ($name && $batch && $method === 'up') {
+            event(new PatchExecuting($name, $batch, $patch));
+        } elseif ($name && $method === 'down') {
+            event(new PatchRollingBack($name, $patch));
+        }
+
+        try {
+            // Determine if we should use transactions
+            $useTransaction = $this->shouldUseTransaction($patch);
+
+            if ($useTransaction) {
+                DB::transaction(function () use ($patch, $method) {
+                    $patch->{$method}();
+                });
+            } else {
+                $patch->{$method}();
+            }
+
+            $log = $patch->log;
+        } catch (Throwable $e) {
+            $exception = $e;
+            $log = $patch->log ?? [];
+        }
+
+        $executionTime = (int) ((microtime(true) - $startTime) * 1000);
+        $memoryUsed = (memory_get_peak_usage(true) - $startMemory) / 1024 / 1024;
+
+        // Dispatch completion events
+        if ($name && $batch) {
+            if ($exception) {
+                event(new PatchFailed($name, $batch, $exception, $executionTime));
+            } elseif ($method === 'up') {
+                event(new PatchExecuted($name, $batch, $log, $executionTime, $memoryUsed));
+            } elseif ($method === 'down') {
+                event(new PatchRolledBack($name, $executionTime));
+            }
+        }
+
+        return [
+            'log' => $log,
+            'executionTime' => $executionTime,
+            'memoryUsed' => round($memoryUsed, 2),
+            'exception' => $exception,
+        ];
+    }
+
+    /**
+     * Determine if the patch should use a transaction.
+     *
+     * @param  object  $patch
+     *
+     * @return bool
+     */
+    protected function shouldUseTransaction(object $patch): bool
+    {
+        // Check if patch has useTransaction property
+        if (property_exists($patch, 'useTransaction')) {
+            $rp = new \ReflectionProperty($patch, 'useTransaction');
+            $rp->setAccessible(true);
+
+            if ($rp->getValue($patch) !== null) {
+                return $rp->getValue($patch);
+            }
+        }
+
+        // Fall back to config
+        return (bool) config('laravel-patches.use_transactions', false);
     }
 }

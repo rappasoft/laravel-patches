@@ -24,7 +24,8 @@ class PatchCommand extends Command
      */
     protected $signature = 'patch
                 {--force : Force the operation to run when in production}
-                {--step : Force the patches to be run so they can be rolled back individually}';
+                {--step : Force the patches to be run so they can be rolled back individually}
+                {--dry-run : Preview patches without executing them}';
 
     /**
      * The console command description.
@@ -83,9 +84,41 @@ class PatchCommand extends Command
 
         $this->patcher->requireFiles($patches = $this->pendingPatches($files, $this->repository->getRan()));
 
+        // Handle dry run mode
+        if ($this->option('dry-run')) {
+            $this->handleDryRun($patches);
+
+            return 0;
+        }
+
         $this->runPending($patches);
 
         return 0;
+    }
+
+    /**
+     * Handle dry run mode
+     *
+     * @param  array  $patches
+     */
+    protected function handleDryRun(array $patches): void
+    {
+        if (! count($patches)) {
+            $this->info(__('No patches to run.'));
+
+            return;
+        }
+
+        $this->line("<fg=cyan>Dry run mode - No patches will be executed</>");
+        $this->newLine();
+
+        foreach ($patches as $file) {
+            $name = $this->patcher->getPatchName($file);
+            $this->line("<comment>Would run:</comment> {$name}");
+        }
+
+        $this->newLine();
+        $this->info("Total patches: " . count($patches));
     }
 
     /**
@@ -139,14 +172,40 @@ class PatchCommand extends Command
 
         $this->line("<comment>Running Patch:</comment> {$name}");
 
-        $startTime = microtime(true);
+        $result = $this->patcher->runPatch($patch, 'up', $name, $batch);
 
-        $log = $this->patcher->runPatch($patch, 'up');
+        $runTime = number_format($result['executionTime'], 2);
 
-        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+        if ($result['exception']) {
+            $this->repository->log(
+                $name,
+                $batch,
+                $result['log'] ?? [],
+                $result['executionTime'],
+                $result['memoryUsed'],
+                null,
+                null,
+                'failed',
+                $result['exception']->getMessage(),
+                $result['exception']->getTraceAsString()
+            );
 
-        $this->repository->log($name, $batch, $log);
+            $this->error("<fg=red>Failed:</> {$name} ({$runTime}ms)");
+            $this->error("  Error: {$result['exception']->getMessage()}");
 
-        $this->line("<info>Patched:</info> {$name} ({$runTime}ms)");
+            if (config('laravel-patches.stop_on_error', true)) {
+                throw $result['exception'];
+            }
+        } else {
+            $this->repository->log(
+                $name,
+                $batch,
+                $result['log'] ?? [],
+                $result['executionTime'],
+                $result['memoryUsed']
+            );
+
+            $this->line("<info>Patched:</info> {$name} ({$runTime}ms)");
+        }
     }
 }
