@@ -22,10 +22,17 @@ jobs:
             plugin: '^2.0'
             phpunit: '^10.0'
           - laravel: '12.*'
+            php: 8.3
             testbench: '^10.0'
-            pest: '^3.0'
-            plugin: '^3.0'
-            phpunit: '^11.5'
+            pest: '^4.0'
+            plugin: '^4.0'
+            phpunit: '^12.0'
+          - laravel: '12.*'
+            php: 8.4
+            testbench: '^10.0'
+            pest: '^4.0'
+            plugin: '^4.0'
+            phpunit: '^12.0'
 
     name: PHP ${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -47,7 +54,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" 'orchestra/testbench:${{ matrix.testbench }}' 'pestphp/pest:${{ matrix.pest }}' 'pestphp/pest-plugin-laravel:${{ matrix.plugin }}' 'phpunit/phpunit:${{ matrix.phpunit }}' --no-interaction --no-update
+          composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" "pestphp/pest-plugin-laravel:${{ matrix.plugin }}" "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
