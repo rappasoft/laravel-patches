@@ -7,6 +7,13 @@ use Rappasoft\LaravelPatches\LaravelPatchesServiceProvider;
 
 class TestCase extends Orchestra
 {
+    /**
+     * The latest response returned by the application.
+     *
+     * @var \Illuminate\Testing\TestResponse|null
+     */
+    public static $latestResponse = null;
+
     protected function setUp(): void
     {
         parent::setUp();
