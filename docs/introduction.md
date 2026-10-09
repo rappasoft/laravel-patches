@@ -21,9 +21,11 @@ This package generates patch files in the same fashion Laravel generates migrati
 - **Transaction support** for atomic operations
 - **Error handling** with detailed logging and recovery options
 - **Multiple commands** for managing patches (`status`, `list`, `dry-run`)
-- **Laravel 11 & 12 compatible**
+- **Laravel 11, 12 & 13 compatible**
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11.x - 12.x
+- Laravel 11.x - 13.x (Laravel 13 requires PHP 8.3+)
+
+Use patched Laravel 12.69+ or 13.30+ for production. Laravel 11 remains compatible, but its security support ended on March 12, 2026 and it has unresolved framework advisories. The Laravel 11 CI lane permits only those known advisories for compatibility testing; dependency security checks remain enabled for all other advisories and versions.

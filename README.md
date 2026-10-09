@@ -9,12 +9,14 @@
 
 This package generates patch files in the same fashion Laravel generates migrations. Each file is timestamped with an up and a down method and is associated with a batch. You may run or rollback patches with the commands below.
 
-This is a very simple package. It runs whatever is in your up and down methods on each patch in the order the patches are defined. It currently does not handle any errors or database transactions, please make sure you account for everything and have a backup plan when running patches in production.
+The package runs each patch's up and down methods in order, tracks execution metadata, and dispatches lifecycle events. Errors are logged, and database transactions can be enabled globally or per patch. Test patches and keep a backup plan when running them in production.
 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11.x - 12.x
+- Laravel 11.x - 13.x (Laravel 13 requires PHP 8.3+)
+
+Use patched Laravel 12.69+ or 13.30+ for production. Laravel 11 remains compatible, but its security support ended on March 12, 2026 and it has unresolved framework advisories.
 
 ## Installation
 
