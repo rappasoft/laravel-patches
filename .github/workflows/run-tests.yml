@@ -44,6 +44,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Allow known Laravel 11 advisories for compatibility tests
+        shell: bash
         if: matrix.laravel == '11.*'
         shell: bash
         run: >
