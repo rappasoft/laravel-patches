@@ -11,7 +11,7 @@ All notable changes to `laravel-patches` will be documented in this file.
 ### Fixed
 - Preserve patch execution history and stop when a rollback fails.
 - Dispatch rollback completion and failure events with the original batch.
-- Test every supported Laravel/PHP combination in CI and update GitHub Actions, including the patched PHP setup action.
+- Test every supported Laravel/PHP combination in CI, including master and release tags, and update GitHub Actions, including the patched PHP setup action.
 - Correct documentation version metadata, migration setup instructions, and error handling guidance.
 
 ### Upgrade Notes

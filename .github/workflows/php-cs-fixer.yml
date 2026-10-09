@@ -3,6 +3,7 @@ name: Check styling
 on:
   push:
     branches: [master, develop]
+    tags: ['v*']
   pull_request:
     branches: [master, develop]
 
