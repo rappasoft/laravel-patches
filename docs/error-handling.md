@@ -33,6 +33,12 @@ Or use environment variable:
 PATCHES_STOP_ON_ERROR=false
 ```
 
+### Rollback Failures
+
+If a patch's `down()` method throws, rollback stops and rethrows the exception. The patch's database record is retained so you can correct the rollback and retry it. `stop_on_error` applies to running patches; rollback always stops on failure to preserve rollback order.
+
+`PatchFailed` is dispatched with the original batch on failure. `PatchRolledBack` is dispatched only when the rollback succeeds. Enable transactions if the database changes in a failed `down()` method should also be rolled back.
+
 ---
 
 ## Error Logging

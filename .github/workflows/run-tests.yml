@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master, develop]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -13,23 +16,23 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [8.2, 8.3, 8.4]
+        php: ['8.2', '8.3', '8.4', '8.5']
+        laravel: ['11.*', '12.*', '13.*']
         stability: [prefer-lowest, prefer-stable]
-        include:
+        exclude:
           - laravel: '11.*'
-          - laravel: '12.*'
-            php: 8.3
-          - laravel: '12.*'
-            php: 8.4
+            php: '8.5'
+          - laravel: '13.*'
+            php: '8.2'
 
     name: PHP ${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.40.0
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, fileinfo
@@ -40,10 +43,19 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: Allow known Laravel 11 advisories for compatibility tests
+        if: matrix.laravel == '11.*'
+        run: >
+          composer config --json policy.advisories.ignore-id
+          '{"PKSA-d5tc-s1qs-h781":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-m5cs-t1y6-qpcs":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-3r5d-mb8f-1qw9":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-mdq4-51ck-6kdq":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13."}'
+
       - name: Install dependencies
         run: |
           composer require --dev "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+      - name: Audit dependencies
+        run: composer audit
 
       - name: Execute tests
         run: ./vendor/bin/pest --ci

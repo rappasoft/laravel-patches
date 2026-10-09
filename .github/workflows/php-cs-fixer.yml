@@ -1,6 +1,13 @@
-name: Check & fix styling
+name: Check styling
 
-on: [push]
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+permissions:
+  contents: read
 
 jobs:
   php-cs-fixer:
@@ -8,16 +15,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
+        uses: actions/checkout@v7.0.1
 
-      - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.40.0
         with:
-          args: --config=.php-cs-fixer.php --allow-risky=yes
+          php-version: '8.4'
+          coverage: none
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Fix Styling
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction
+
+      - name: Check PHP styling
+        run: composer format -- --dry-run --diff

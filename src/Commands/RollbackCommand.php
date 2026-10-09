@@ -151,7 +151,13 @@ class RollbackCommand extends Command
 
         $this->line("<comment>Rolling back:</comment> {$name}");
 
-        $result = $this->patcher->runPatch($instance, 'down', $name);
+        $result = $this->patcher->runPatch($instance, 'down', $name, $patch->batch);
+
+        if ($result['exception']) {
+            $this->error("Rollback failed: {$name} ({$result['exception']->getMessage()})");
+
+            throw $result['exception'];
+        }
 
         $runTime = number_format($result['executionTime'], 2);
 

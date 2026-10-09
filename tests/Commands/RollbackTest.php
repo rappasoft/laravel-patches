@@ -1,6 +1,58 @@
 <?php
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
+use Rappasoft\LaravelPatches\Events\PatchFailed;
+use Rappasoft\LaravelPatches\Events\PatchRolledBack;
+use Rappasoft\LaravelPatches\Events\PatchRollingBack;
+use Rappasoft\LaravelPatches\Models\Patch;
+
+beforeEach(fn () => Log::swap(\Mockery::mock(Log::getFacadeRoot())->makePartial()));
+
+it('preserves the patch record and stops when rollback fails', function () {
+    Event::fake([PatchFailed::class, PatchRolledBack::class, PatchRollingBack::class]);
+    config(['laravel-patches.use_transactions' => true, 'laravel-patches.stop_on_error' => false]);
+
+    file_put_contents(
+        database_path('patches/2026_10_09_000000_rollback_failure.php'),
+        '<?php
+        class RollbackFailure extends \Rappasoft\LaravelPatches\Patch {
+            public function up() {}
+            public function down() {
+                \Illuminate\Support\Facades\DB::table("patches")->update(["log" => "[\"partial rollback\"]"]);
+                throw new \RuntimeException("Rollback failed");
+            }
+        }'
+    );
+
+    $this->artisan('patch')->assertSuccessful();
+
+    expect(fn () => \Illuminate\Support\Facades\Artisan::call('patch:rollback'))->toThrow('Rollback failed');
+    expect(Patch::count())->toBe(1)
+        ->and(Patch::first()->log)->toBe([])
+        ->and(Patch::first()->status)->toBe('success');
+    Event::assertDispatched(PatchFailed::class, fn ($event) => $event->patch === '2026_10_09_000000_rollback_failure' && $event->batch === 1);
+    Event::assertNotDispatched(PatchRolledBack::class);
+});
+
+it('dispatches completion events after a successful rollback', function () {
+    Event::fake([PatchRolledBack::class, PatchRollingBack::class]);
+    file_put_contents(
+        database_path('patches/2026_10_09_000000_rollback_events.php'),
+        '<?php
+        class RollbackEvents extends \Rappasoft\LaravelPatches\Patch {
+            public function up() {}
+            public function down() {}
+        }'
+    );
+
+    $this->artisan('patch')->assertSuccessful();
+    $this->artisan('patch:rollback')->assertSuccessful();
+
+    expect(Patch::count())->toBe(0);
+    Event::assertDispatched(PatchRollingBack::class);
+    Event::assertDispatched(PatchRolledBack::class, fn ($event) => $event->patch === '2026_10_09_000000_rollback_events');
+});
 
 it('rollsback a patch', function () {
     Log::shouldReceive('info')->with('Goodbye First');
