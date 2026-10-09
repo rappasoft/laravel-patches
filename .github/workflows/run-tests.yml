@@ -45,6 +45,7 @@ jobs:
 
       - name: Allow known Laravel 11 advisories for compatibility tests
         if: matrix.laravel == '11.*'
+        shell: bash
         run: >
           composer config --json policy.advisories.ignore-id
           '{"PKSA-d5tc-s1qs-h781":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-m5cs-t1y6-qpcs":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-3r5d-mb8f-1qw9":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13.","PKSA-mdq4-51ck-6kdq":"Laravel 11 compatibility tests only; upgrade production apps to patched Laravel 12 or 13."}'
